@@ -1,1 +1,1 @@
-dede jelek sekali ya allah
+dedehfurhr
