@@ -32,7 +32,8 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {{-- Looping menu dari database --}}
-        @foreach($menu_coffe as $menu)
+     @foreach($menu_coffe as $menu)
+
             <div class="bg-white border rounded-2xl shadow-sm hover:shadow-md transition p-4">
                 <img src="{{ asset('uploads/'.$menu->image) }}" alt="{{ $menu->name }}" class="rounded-xl h-48 w-full object-cover mb-4">
                 

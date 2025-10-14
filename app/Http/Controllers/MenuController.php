@@ -10,9 +10,9 @@ class MenuController extends Controller
      public function index()
     {
         // Ambil semua data dari tabel 'menus'
-        $menus = Menu::all();
+        $menu_coffe = Menu::all();
 
         // Kirim ke view resources/views/menu.blade.php
-        return view('menu', compact('menus'));
+        return view('menu', compact('menu_coffe'));
     }
 }
