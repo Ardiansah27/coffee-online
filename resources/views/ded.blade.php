@@ -1,1 +1,1 @@
-dedededuyfr
+dede jelek sekali ya allah
