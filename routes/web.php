@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\MenuController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +13,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+// Halaman utama (landing page)
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('home');
+
+
+
+Route::get('/menu', [MenuController::class, 'index'])->name('menu');
+
+// Halaman Legalitas Coffee
+Route::get('/legalitas', function () {
+    return view('legalitas');
+})->name('legalitas');
+
+// Halaman Contact Us
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+// Halaman Profil (nama akun / user)
+Route::get('/profil', function () {
+    return view('profil');
+})->name('profil');
+
+// Halaman Login
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
