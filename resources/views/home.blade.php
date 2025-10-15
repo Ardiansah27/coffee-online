@@ -115,7 +115,7 @@
 
 <br><br><br><br>
 
-<section class="bg-gradient-to-br from-[#4b2e12] via-[#a86b3a] to-[#8b5e34] py-24 px-6 md:px-20 flex flex-col md:flex-row items-start justify-between gap-12 text-white">
+<section class="bg-gradient-to-br from-[#4b2e12] via-[#a86b3a] to-[#8b5e34] py-24 px-6 md:px-20 flex flex-col md:flex-row items-start justify-between gap-12 text-white mb-36">
   <!-- Kiri: Teks & Tombol -->
   <div class="md:w-2/5 space-y-5">
     <h4 class="text-yellow-300 text-sm font-semibold flex items-center gap-2">

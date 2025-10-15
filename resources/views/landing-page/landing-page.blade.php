@@ -64,24 +64,23 @@
   </main>
 
    
-<br><br><br><br><br>
-
-
-<footer class="bg-cover bg-center text-white pt-12 pb-6 px-6" style="background-image: url('{{ asset('uploads/footer.png') }}');">
-  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+<footer class="mt-10 bg-cover bg-center text-white pt-12 pb-6 px-6 mt-5" style="background-image: url('{{ asset('uploads/footer.png') }}');">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 items-start">
 
     <!-- Logo & Deskripsi -->
-    <div class="md:col-span-1">
-      <img src="{{ asset('uploads/logo2.png') }}" alt="Kopi Sarongge" class="h-16 mb-9 drop-shadow-md">
-      <p class="text-sm leading-relaxed text-gray-200">
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
+      <img src="{{ asset('uploads/logo2.png') }}" alt="Kopi Sarongge" class="h-20 w-130 mb-6 drop-shadow-md">
+      <p class="text-xl leading-relaxed text-gray-200">
         Tempat terbaik menikmati kopi alami di kaki gunung, ditemani hawa sejuk dan batu alam yang menenangkan.
       </p>
     </div>
 
-  <!-- Navigasi -->
-<div >
-  <h4 class="text-lg font-semibold mb-4 text-yellow-300">Navigasi</h4>
-  <ul class="space-y-4 text-sm text-gray-200">
+    <!-- Navigasi -->
+   <div class="flex flex-col items-center md:items-start text-center md:text-left md:ml-24">
+  <h1 class="text-lg font-semibold mb-4 text-yellow-300 uppercase tracking-wide">
+    Navigasi
+  </h1>
+  <ul class="space-y-2 text-lg text-gray-200">
     <li><a href="{{ route('home') }}" class="hover:text-yellow-400 transition">Home</a></li>
     <li><a href="{{ route('menu') }}" class="hover:text-yellow-400 transition">Menu</a></li>
     <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition">Contact</a></li>
@@ -91,39 +90,48 @@
 
 
     <!-- Kontak -->
-    <div>
-      <h4 class="text-lg font-semibold mb-4 text-yellow-300">Kontak Kami</h4>
-      <p class="text-sm text-gray-200">
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
+      <h1 class="text-lg font-semibold mb-4 text-yellow-300 uppercase tracking-wide">Kontak Kami</h1>
+      <p class="text-lg text-gray-200 leading-relaxed">
         Jl. Raya Sarongge No. 99<br>
         Cianjur, Jawa Barat 43252<br>
         Indonesia
       </p>
-      <p class="mt-2 text-sm text-gray-200">📞 (0263) 123-456</p>
-      <p class="text-sm text-gray-200">✉️ info@saronggecoffee.com</p>
-    </div>
-
-    <!-- Peta Lokasi -->
-    <div>
-      <h4 class="text-lg font-semibold mb-4 text-yellow-300">Peta Lokasi</h4>
-      <div class="rounded-xl overflow-hidden shadow-md border border-white/10">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.471366239993!2d107.1234567!3d-6.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6851dfdfd!2sSarongge%20Coffee!5e0!3m2!1sen!2sid!4v1234567890"
-          width="100%"
-          height="200"
-          style="border:0;"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="mt-3 space-y-1 text-lg text-gray-200">
+        <p>📞 (0263) 123-456</p>
+        <p>✉️ devanzulfangga.com</p>
       </div>
     </div>
+
+   <!-- Peta Lokasi -->
+<div class="flex flex-col items-center text-center h-full">
+  <!-- Judul di tengah -->
+  <h1 class="text-lg font-semibold mb-4 text-yellow-300 uppercase tracking-wide">
+    Peta Lokasi
+  </h1>
+
+  <!-- Map -->
+  <div class="rounded-xl overflow-hidden shadow-md border border-white/10 w-full max-w-[600px]">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.471366239993!2d107.1234567!3d-6.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6851dfdfd!2sSarongge%20Coffee!5e0!3m2!1sen!2sid!4v1234567890"
+      class="w-full h-[150px] md:h-[150px] lg:h-[150px]"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>
 
   </div>
 
   <!-- Garis dan Copyright -->
-  <div class="mt-10 text-center text-sm text-gray-300 border-t border-white/20 pt-4">
+  <div class="mt-8 text-center text-sm text-gray-300 border-t border-white/20 ">
     &copy; {{ date('Y') }} <span class="text-yellow-200 font-semibold">Coffee Sarongge</span>. All rights reserved.
   </div>
 </footer>
+
+
 
 
   <!-- Script Toggle Mobile Menu with Transition -->
