@@ -64,11 +64,66 @@
   </main>
 
    
+<br><br><br><br><br>
 
-  <!-- Footer -->
-  <footer class="bg-[#4b2e12] text-white py-6 text-center mt-10">
-    <p>© 2025 Coffee Bliss | All Rights Reserved</p>
-  </footer>
+
+<footer class="bg-cover bg-center text-white pt-12 pb-6 px-6" style="background-image: url('{{ asset('uploads/footer.png') }}');">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+
+    <!-- Logo & Deskripsi -->
+    <div class="md:col-span-1">
+      <img src="{{ asset('uploads/logo2.png') }}" alt="Kopi Sarongge" class="h-16 mb-9 drop-shadow-md">
+      <p class="text-sm leading-relaxed text-gray-200">
+        Tempat terbaik menikmati kopi alami di kaki gunung, ditemani hawa sejuk dan batu alam yang menenangkan.
+      </p>
+    </div>
+
+  <!-- Navigasi -->
+<div >
+  <h4 class="text-lg font-semibold mb-4 text-yellow-300">Navigasi</h4>
+  <ul class="space-y-4 text-sm text-gray-200">
+    <li><a href="{{ route('home') }}" class="hover:text-yellow-400 transition">Home</a></li>
+    <li><a href="{{ route('menu') }}" class="hover:text-yellow-400 transition">Menu</a></li>
+    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition">Contact</a></li>
+    <li><a href="{{ route('legalitas') }}" class="hover:text-yellow-400 transition">Legalitas</a></li>
+  </ul>
+</div>
+
+
+    <!-- Kontak -->
+    <div>
+      <h4 class="text-lg font-semibold mb-4 text-yellow-300">Kontak Kami</h4>
+      <p class="text-sm text-gray-200">
+        Jl. Raya Sarongge No. 99<br>
+        Cianjur, Jawa Barat 43252<br>
+        Indonesia
+      </p>
+      <p class="mt-2 text-sm text-gray-200">📞 (0263) 123-456</p>
+      <p class="text-sm text-gray-200">✉️ info@saronggecoffee.com</p>
+    </div>
+
+    <!-- Peta Lokasi -->
+    <div>
+      <h4 class="text-lg font-semibold mb-4 text-yellow-300">Peta Lokasi</h4>
+      <div class="rounded-xl overflow-hidden shadow-md border border-white/10">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.471366239993!2d107.1234567!3d-6.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6851dfdfd!2sSarongge%20Coffee!5e0!3m2!1sen!2sid!4v1234567890"
+          width="100%"
+          height="200"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Garis dan Copyright -->
+  <div class="mt-10 text-center text-sm text-gray-300 border-t border-white/20 pt-4">
+    &copy; {{ date('Y') }} <span class="text-yellow-200 font-semibold">Coffee Sarongge</span>. All rights reserved.
+  </div>
+</footer>
 
 
   <!-- Script Toggle Mobile Menu with Transition -->

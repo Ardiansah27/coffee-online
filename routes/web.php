@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\HomeController;
 /*
+
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -14,11 +16,9 @@ use App\Http\Controllers\MenuController;
 */
 
 
-// Halaman utama (landing page)
-Route::get('/', function () {
-    return view('home');
-})->name('home');
 
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/menu', [MenuController::class, 'index'])->name('menu');
