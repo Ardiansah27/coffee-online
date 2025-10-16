@@ -31,30 +31,54 @@
       </button>
     </div>
  
+<!-- Menu Desktop -->
+<ul class="hidden md:flex space-x-6 font-medium items-center justify-end py-6 text-xl">
+  <li><a href="{{ route('home') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Home</a></li>
+  <li><a href="{{ route('menu') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
+  <li><a href="{{ route('legalitas') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Legalitas</a></li>
+  <li><a href="{{ route('contact') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Contact Us</a></li>
+  <li><a href="{{ route('profil') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Profil</a></li>
 
-  <!-- Menu Desktop -->
-  <ul class="hidden md:flex space-x-6 font-medium items-center justify-end py-6 text-xl ">
-    <li><a href="{{ route('home') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Home</a></li>
-    <li><a href="{{ route('menu') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
-    <li><a href="{{ route('legalitas') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Legalitas</a></li>
-    <li><a href="{{ route('contact') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Contact Us</a></li>
-    <li><a href="{{ route('profil') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Profil</a></li>
-    <li><a href="{{ route('login') }}" class="bg-[#6f4e37] hover:underline hover:font-bold text-white px-4 py-2 rounded-lg hover:bg-[#5a3e2b] transition-colors duration-300">Log In</a></li>
-  </ul>
+  <!-- Tambahkan Keranjang -->
+  <li>
+    <a href="{{ route('keranjang') }}" class="flex items-center gap-2 hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">
+      <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-6 h-6">
+      Keranjang
+    </a>
+  </li>
+
+  <li>
+    <a href="{{ route('login') }}" class="bg-[#6f4e37] hover:underline hover:font-bold text-white px-4 py-2 rounded-lg hover:bg-[#5a3e2b] transition-colors duration-300">
+      Log In
+    </a>
+  </li>
+</ul>
 </div>
 
-  <!-- Mobile Menu -->
-  <ul id="mobile-menu" class="md:hidden absolute top-full left-0 w-full flex-col space-y-2 px-4 pb-3 bg-white/90 backdrop-blur-md shadow-md transform -translate-y-2 opacity-0 pointer-events-none transition-all duration-300">
-    <li><a href="{{ route('home') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
-    <li><a href="{{ route('menu') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
-    <li><a href="{{ route('legalitas') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Legalitas</a></li>
-    <li><a href="{{ route('contact') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Contact Us</a></li>
-    <li><a href="{{ route('profil') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Profil</a></li>
-    <li><a href="{{ route('login') }}" class="block py-2 bg-[#6f4e37] text-white rounded-lg text-center hover:bg-[#5a3e2b] transition-colors duration-300">Log In</a></li>
-  </ul>
-</nav>
- </div>
+<!-- Mobile Menu -->
+<ul id="mobile-menu" class="md:hidden absolute top-full left-0 w-full flex-col space-y-2 px-4 pb-3 bg-white/90 backdrop-blur-md shadow-md transform -translate-y-2 opacity-0 pointer-events-none transition-all duration-300">
+  <li><a href="{{ route('home') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
+  <li><a href="{{ route('menu') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
+  <li><a href="{{ route('legalitas') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Legalitas</a></li>
+  <li><a href="{{ route('contact') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Contact Us</a></li>
+  <li><a href="{{ route('profil') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Profil</a></li>
 
+  <!-- Tambahkan Keranjang di Mobile -->
+  <li>
+    <a href="{{ route('keranjang') }}" class="flex items-center gap-2 py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300 ">
+      <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-6 h-6">
+      Keranjang
+    </a>
+  </li>
+
+  <li>
+    <a href="{{ route('login') }}" class="block py-2 bg-[#6f4e37] text-white rounded-lg text-center hover:bg-[#5a3e2b] transition-colors duration-300">
+      Log In
+    </a>
+  </li>
+</ul>
+</nav>
+</div>
 
 
   <!-- Konten halaman -->
@@ -75,8 +99,8 @@
       </p>
     </div>
 
-    <!-- Navigasi -->
-   <div class="flex flex-col items-center md:items-start text-center md:text-left md:ml-24">
+   <!-- Navigasi -->
+<div class="flex flex-col items-center md:items-start text-center md:text-left md:ml-24">
   <h1 class="text-lg font-semibold mb-4 text-yellow-300 uppercase tracking-wide">
     Navigasi
   </h1>
@@ -85,8 +109,10 @@
     <li><a href="{{ route('menu') }}" class="hover:text-yellow-400 transition">Menu</a></li>
     <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition">Contact</a></li>
     <li><a href="{{ route('legalitas') }}" class="hover:text-yellow-400 transition">Legalitas</a></li>
+
   </ul>
 </div>
+
 
 
     <!-- Kontak -->
