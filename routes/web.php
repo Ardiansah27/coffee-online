@@ -3,42 +3,40 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\HomeController;
-/*
-
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\AuthController;
 
 
 
 
+
+// Landing page / semua user bisa lihat
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-
 Route::get('/menu', [MenuController::class, 'index'])->name('menu');
-
-// Halaman Legalitas Coffee
 Route::get('/legalitas', function () {
     return view('legalitas');
 })->name('legalitas');
-
-// Halaman Contact Us
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
-// Halaman Profil (nama akun / user)
+//////////////////////////////////////////
+
+// Profil hanya untuk user login
 Route::get('/profil', function () {
     return view('profil');
-})->name('profil');
+})->middleware('auth')->name('profil');
 
-// Halaman Login
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
+// Halaman login & register
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+
+// Halaman Beli / checkout harus login
+Route::get('/beli/{id}', function ($id) {
+    // logika beli, misal ambil menu by id
+    return view('beli', ['id' => $id]);
+})->middleware('auth')->name('beli');
