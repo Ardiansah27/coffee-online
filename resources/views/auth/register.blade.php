@@ -1,5 +1,5 @@
 @extends('auth.template.template-auth')
-@section('title', 'Register Coffee Enyong')
+@section('title', 'Login Coffee Sarongge')
 
 @section('layout-register')
 

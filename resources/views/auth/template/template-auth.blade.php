@@ -12,6 +12,9 @@
 
 @yield('layout-login') {{-- Konten halaman login/register akan muncul di sini --}}
  @yield('layout-register')
+ @yield('forgot')
+ @yield('reset')
+ 
 
 
 

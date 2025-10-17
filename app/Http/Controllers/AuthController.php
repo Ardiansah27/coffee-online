@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -25,7 +26,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/'); // arahkan ke home setelah login
+            return redirect()->intended('/profil');
         }
 
         return back()->withErrors([
@@ -39,25 +40,28 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    // Proses register
+  
     public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:6|confirmed',
+        'phone' => 'nullable|string|max:20',
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'password' => Hash::make($request->password),
+        'profile_picture' => null,
+    ]);
 
-        Auth::login($user);
+    // Jangan login otomatis, langsung arahkan ke login
+    return redirect()->route('login')->with('success', 'Akun berhasil dibuat, silakan login.');
+}
 
-        return redirect('/'); // arahkan ke home setelah register
-    }
 
     // Logout
     public function logout(Request $request)
@@ -66,5 +70,39 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+    // ===============================
+    // Login dengan Google
+    // ===============================
+
+    // Redirect ke Google
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    // Callback Google
+    public function handleGoogleCallback()
+    {
+        // Tambahkan PHPDoc supaya Intelephense tahu tipe objek
+        /** @var \Laravel\Socialite\Two\GoogleProvider $googleDriver */
+        $googleDriver = Socialite::driver('google');
+
+        // Panggil stateless() seperti biasa
+        $googleUser = $googleDriver->stateless()->user();
+
+        $user = User::firstOrCreate(
+            ['email' => $googleUser->email],
+            [
+                'name' => $googleUser->name,
+                'google_id' => $googleUser->id,
+                'password' => Hash::make(rand(1000, 9999)), // password random
+                'profile_picture' => $googleUser->avatar ?? null,
+            ]
+        );
+
+        Auth::login($user);
+        return redirect('/profil');
     }
 }

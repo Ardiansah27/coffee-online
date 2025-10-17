@@ -149,3 +149,5 @@ function togglePassword(passwordId, eyeId) {
 
 </body>
 </html>
+
+composer require laravel/socialite
