@@ -28,7 +28,7 @@
 </div>
 
     <h1 class="text-4xl font-bold mt-4 w-full text-center mb-3 text-[#5A3A1A]">Lupa Sandi</h1>
-\
+
 
     <form method="POST" action="{{ route('reset.password') }}" autocomplete="off" class="space-y-4">
         @csrf

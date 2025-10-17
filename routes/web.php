@@ -17,7 +17,7 @@ Route::get('/contact', function () { return view('contact'); })->name('contact')
 //////////////////////////////////////////
 // Halaman user login / profil
 Route::middleware('auth')->group(function() {
-    Route::get('/profil', function() { return view('profil'); })->name('profil');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Halaman beli / checkout
     Route::get('/beli/{id}', function ($id) { return view('beli', ['id' => $id]); })

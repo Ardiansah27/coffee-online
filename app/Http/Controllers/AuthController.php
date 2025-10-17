@@ -4,19 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    // Tampilkan form login
+    // ===============================
+    // 1. Tampilkan form login
+    // ===============================
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // Proses login
+    // ===============================
+    // 2. Proses login manual
+    // ===============================
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -26,7 +31,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/profil');
+            return redirect()->intended('home');
         }
 
         return back()->withErrors([
@@ -34,75 +39,99 @@ class AuthController extends Controller
         ]);
     }
 
-    // Tampilkan form register
+    // ===============================
+    // 3. Tampilkan form register
+    // ===============================
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-  
+    // ===============================
+    // 4. Proses register
+    // ===============================
     public function register(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|min:6|confirmed',
-        'phone' => 'nullable|string|max:20',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20|unique:users,phone',
+            'password' => [
+                'required',
+                'string',
+                'min:6',
+                'confirmed',
+                'regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/',
+            ],
+        ], [
+            'email.unique' => 'Email sudah digunakan.',
+            'phone.required' => 'Nomor telepon wajib diisi.',
+            'phone.unique' => 'Nomor telepon sudah digunakan.',
+            'password.min' => 'Password minimal 6 karakter.',
+            'password.regex' => 'Password harus mengandung huruf dan angka.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'phone' => $request->phone,
-        'password' => Hash::make($request->password),
-        'profile_picture' => null,
-    ]);
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'profile_picture' => null,
+        ]);
 
-    // Jangan login otomatis, langsung arahkan ke login
-    return redirect()->route('login')->with('success', 'Akun berhasil dibuat, silakan login.');
-}
+        return redirect()->route('login')->with('success', 'Akun berhasil dibuat, silakan login.');
+    }
 
-
-    // Logout
+    // ===============================
+    // 5. Logout
+    // ===============================
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect('login');
     }
 
     // ===============================
-    // Login dengan Google
+    // 6. Login dengan Google
     // ===============================
-
-    // Redirect ke Google
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
 
-    // Callback Google
     public function handleGoogleCallback()
     {
-        // Tambahkan PHPDoc supaya Intelephense tahu tipe objek
-        /** @var \Laravel\Socialite\Two\GoogleProvider $googleDriver */
-        $googleDriver = Socialite::driver('google');
+        try {
+            /** @var \Laravel\Socialite\Two\GoogleProvider $googleDriver */
+            $googleDriver = Socialite::driver('google');
+            $googleUser = $googleDriver->stateless()->user();
 
-        // Panggil stateless() seperti biasa
-        $googleUser = $googleDriver->stateless()->user();
+            // Buat user baru jika belum ada
+            $user = User::firstOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'name' => $googleUser->getName(),
+                    'google_id' => $googleUser->getId(),
+                    'password' => Hash::make(rand(100000, 999999)), // password acak
+                    'profile_picture' => $googleUser->getAvatar() ?? null,
+                ]
+            );
 
-        $user = User::firstOrCreate(
-            ['email' => $googleUser->email],
-            [
-                'name' => $googleUser->name,
-                'google_id' => $googleUser->id,
-                'password' => Hash::make(rand(1000, 9999)), // password random
-                'profile_picture' => $googleUser->avatar ?? null,
-            ]
-        );
+            // Login user
+            Auth::login($user);
 
-        Auth::login($user);
-        return redirect('/profil');
+            // Hapus intended URL lama supaya tidak diarahkan ke /profil
+            Session::forget('url.intended');
+
+            // Redirect ke home
+            return redirect()->route('home');
+
+        } catch (\Exception $e) {
+            // Jika gagal, arahkan kembali ke login dengan pesan error
+            return redirect()->route('login')->with('error', 'Gagal login menggunakan Google. Silakan coba lagi.');
+        }
     }
 }
