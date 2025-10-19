@@ -33,64 +33,104 @@
  
 <!-- Menu Desktop -->
 <ul class="hidden md:flex space-x-6 font-medium items-center justify-end py-6 text-xl w-full">
-  <!-- 🔸 Menu lainnya tetap -->
-  <li><a href="{{ route('home') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Home</a></li>
-  <li><a href="{{ route('menu') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
-  <li><a href="{{ route('legalitas') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Legalitas</a></li>
-  <li><a href="{{ route('contact') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Contact Us</a></li>
-  <li><a href="{{ route('profil') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Profil</a></li>
 
-  <!-- 🔹 Tambahan WRAPPER agar bisa dorong kanan -->
-  <div class="flex items-center justify-end gap-4 ml-auto"> <!-- 🟢 DITAMBAHKAN -->
-    <!-- Keranjang -->
-    <li>
-      <a href="{{ route('home') }}" class="flex items-center gap-2 hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">
-        <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-11 h-11">
-      </a>
-    </li>
+    @guest
+        <!-- Guest hanya bisa lihat Home, Menu, dan Log In -->
+        <li><a href="{{ route('landing') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Home</a></li>
+        <li><a href="{{ route('menu-guest') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
+        <li>
+            <a href="{{ route('login') }}" class="bg-[#6f4e37] hover:underline hover:font-bold text-white px-4 py-2 rounded-lg hover:bg-[#5a3e2b] transition-colors duration-300">
+                Log In
+            </a>
+        </li>
+    @endguest
 
-    <!-- Tombol Log In -->
-    <li>
-      <a href="{{ route('login') }}" class="bg-[#6f4e37] hover:underline hover:font-bold text-white px-4 py-2 rounded-lg hover:bg-[#5a3e2b] transition-colors duration-300">
-        Log In
-      </a>
-    </li>
-  </div> <!-- 🟢 WRAPPER TAMBAHAN TUTUP -->
+    @auth
+        <!-- User login tetap sama seperti sekarang -->
+        <li><a href="{{ route('home') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Home</a></li>
+        <li><a href="{{ route('menu-login') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
+        <li><a href="{{ route('legalitas') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Legalitas</a></li>
+        <li><a href="{{ route('contact') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Contact Us</a></li>
+        <li><a href="{{ route('profil') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Profil</a></li>
+
+        <div class="flex items-center justify-end gap-4 ml-auto">
+            <!-- Keranjang -->
+            <li>
+                <a href="{{ route('home') }}" class="flex items-center gap-2 hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">
+                    <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-11 h-11">
+                </a>
+            </li>
+
+            <!-- Logout -->
+            <li>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bg-[#6f4e37] hover:underline hover:font-bold text-white px-4 py-2 rounded-lg hover:bg-[#5a3e2b] transition-colors duration-300">
+                        Logout
+                    </button>
+                </form>
+            </li>
+        </div>
+    @endauth
+
 </ul>
-
-
 
 <!-- Mobile Menu -->
 <ul id="mobile-menu" class="md:hidden absolute top-full left-0 w-full flex-col space-y-2 px-4 pb-3 bg-white/90 backdrop-blur-md shadow-md transform -translate-y-2 opacity-0 pointer-events-none transition-all duration-300">
-  <li><a href="{{ route('home') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
-  <li><a href="{{ route('menu') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
-  <li><a href="{{ route('legalitas') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Legalitas</a></li>
-  <li><a href="{{ route('contact') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Contact Us</a></li>
-  <li><a href="{{ route('profil') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Profil</a></li>
+    
+    @guest
+        <li><a href="{{ route('landing') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
+        <li><a href="{{ route('menu-guest') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
+        <li>
+            <a href="{{ route('login') }}" class="block py-2 bg-[#6f4e37] text-white rounded-lg text-center hover:bg-[#5a3e2b] transition-colors duration-300">
+                Log In
+            </a>
+        </li>
+    @endguest
 
-  <!-- Tambahkan Keranjang di Mobile -->
-  <li>
-    <a href="{{ route('home') }}" class="flex items-center gap-2 py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300 ">
-      <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-6 h-6">
-      Keranjang
-    </a>
-  </li>
+    @auth
+        <li><a href="{{ route('home') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
+        <li><a href="{{ route('menu-login') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
+        <li><a href="{{ route('legalitas') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Legalitas</a></li>
+        <li><a href="{{ route('contact') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Contact Us</a></li>
+        <li><a href="{{ route('profil') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Profil</a></li>
 
-  <li>
-    <a href="{{ route('login') }}" class="block py-2 bg-[#6f4e37] text-white rounded-lg text-center hover:bg-[#5a3e2b] transition-colors duration-300">
-      Log In
-    </a>
-  </li>
+        <li>
+            <a href="{{ route('home') }}" class="flex items-center gap-2 py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">
+                <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-6 h-6">
+                Keranjang
+            </a>
+        </li>
+
+        <li>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="block py-2 bg-[#6f4e37] text-white rounded-lg text-center hover:bg-[#5a3e2b] transition-colors duration-300">
+                    Logout
+                </button>
+            </form>
+        </li>
+    @endauth
+
 </ul>
 </nav>
 </div>
 
 
+
+
   <!-- Konten halaman -->
-  <main class="pt-24">
+  <main class="">
+@yield('landing') 
+ 
+  </main>
+
+  <!-- Konten halaman -->
+
+
     @yield('content')
         @yield('menu')
-  </main>
+
 
    
 <footer class="mt-10 bg-cover bg-center text-white pt-12 pb-6 px-6 mt-5" style="background-image: url('{{ asset('uploads/footer.png') }}');">
@@ -111,7 +151,7 @@
   </h1>
   <ul class="space-y-2 text-lg text-gray-200">
     <li><a href="{{ route('home') }}" class="hover:text-yellow-400 transition">Home</a></li>
-    <li><a href="{{ route('menu') }}" class="hover:text-yellow-400 transition">Menu</a></li>
+    <li><a href="{{ route('menu-login') }}" class="hover:text-yellow-400 transition">Menu</a></li>
     <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition">Contact</a></li>
     <li><a href="{{ route('legalitas') }}" class="hover:text-yellow-400 transition">Legalitas</a></li>
 
@@ -185,3 +225,7 @@
 
 </body>
 </html>
+
+
+
+

@@ -1,8 +1,8 @@
 @extends('landing-page.landing-page')
 
-@section('title', 'Home - Coffee Sarongge')
+@section('title', 'Landing Page - Coffee Sarongge')
 
-@section('content')
+@section('landing')
 
 <!-- Hero Section -->
 

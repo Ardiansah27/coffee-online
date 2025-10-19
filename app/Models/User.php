@@ -22,7 +22,11 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
+    // 🔹 Tambahkan di sini
+    public function alamat()
+    {
+        return $this->hasMany(UserAlamat::class, 'user_id');
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

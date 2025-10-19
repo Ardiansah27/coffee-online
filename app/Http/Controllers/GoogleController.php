@@ -34,6 +34,6 @@ class GoogleController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('profil');
+        return redirect()->route('home');
     }
 }

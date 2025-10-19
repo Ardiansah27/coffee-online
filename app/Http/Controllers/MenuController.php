@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Menu;
 
 class MenuController extends Controller
 {
-     public function index()
+    public function index()
     {
-        // Ambil semua data dari tabel 'menus'
+        // Ambil semua data menu dari database
         $menu_coffe = Menu::all();
 
-        // Kirim ke view resources/views/menu.blade.php
+        // Kirim ke view menu.blade.php
         return view('menu', compact('menu_coffe'));
     }
 }
-
-

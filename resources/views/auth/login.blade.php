@@ -182,7 +182,7 @@ function togglePassword(passwordId, eyeId) {
     text: '{{ session('success') }}',
     icon: 'success',
     confirmButtonText: 'OK',
-    background: '#5A3A1A', // coklat coffee
+    background: 'white', // coklat coffee
     color: '#fff',          // teks putih
     confirmButtonColor: '#A15F3B', // tombol coklat gelap
     timer: 4000,
@@ -198,7 +198,7 @@ function togglePassword(passwordId, eyeId) {
     text: '{{ $errors->first() }}',
     icon: 'error',
     confirmButtonText: 'OK',
-    background: '#5A3A1A',
+    background: 'white',
     color: '#fff',
     confirmButtonColor: '#A15F3B'
   });
