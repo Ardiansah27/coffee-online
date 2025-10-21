@@ -9,7 +9,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-[#f9f5f0] text-[#4b2e12]">
+<body class="bg-[#f9f5f0] text-[#4b2e12] overflow-x-hidden">
 
 <!-- Navbar -->
 <nav class="bg-white/80 backdrop-blur-md fixed w-full z-50 shadow-md h-[100px]">
@@ -37,7 +37,7 @@
     @guest
         <!-- Guest hanya bisa lihat Home, Menu, dan Log In -->
         <li><a href="{{ route('landing') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Home</a></li>
-        <li><a href="{{ route('menu-guest') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
+        <li><a href="{{ route('menu') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
         <li>
             <a href="{{ route('login') }}" class="bg-[#6f4e37] hover:underline hover:font-bold text-white px-4 py-2 rounded-lg hover:bg-[#5a3e2b] transition-colors duration-300">
                 Log In
@@ -48,7 +48,7 @@
     @auth
         <!-- User login tetap sama seperti sekarang -->
         <li><a href="{{ route('home') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Home</a></li>
-        <li><a href="{{ route('menu-login') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
+        <li><a href="{{ route('menu') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Menu</a></li>
         <li><a href="{{ route('legalitas') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Legalitas</a></li>
         <li><a href="{{ route('contact') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Contact Us</a></li>
         <li><a href="{{ route('profil') }}" class="hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">Profil</a></li>
@@ -80,7 +80,7 @@
     
     @guest
         <li><a href="{{ route('landing') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
-        <li><a href="{{ route('menu-guest') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
+        <li><a href="{{ route('menu') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
         <li>
             <a href="{{ route('login') }}" class="block py-2 bg-[#6f4e37] text-white rounded-lg text-center hover:bg-[#5a3e2b] transition-colors duration-300">
                 Log In
@@ -90,15 +90,16 @@
 
     @auth
         <li><a href="{{ route('home') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
-        <li><a href="{{ route('menu-login') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
+        <li><a href="{{ route('menu') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
         <li><a href="{{ route('legalitas') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Legalitas</a></li>
         <li><a href="{{ route('contact') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Contact Us</a></li>
         <li><a href="{{ route('profil') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Profil</a></li>
 
         <li>
             <a href="{{ route('home') }}" class="flex items-center gap-2 py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">
+              Keranjang
                 <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-6 h-6">
-                Keranjang
+                
             </a>
         </li>
 
@@ -120,16 +121,13 @@
 
 
   <!-- Konten halaman -->
-  <main class="">
+  <main class="overflow-x-hidden">
 @yield('landing') 
- 
+     @yield('content')
+        @yield('menu')
   </main>
 
-  <!-- Konten halaman -->
 
-
-    @yield('content')
-        @yield('menu')
 
 
    
@@ -151,7 +149,7 @@
   </h1>
   <ul class="space-y-2 text-lg text-gray-200">
     <li><a href="{{ route('home') }}" class="hover:text-yellow-400 transition">Home</a></li>
-    <li><a href="{{ route('menu-login') }}" class="hover:text-yellow-400 transition">Menu</a></li>
+    <li><a href="{{ route('menu') }}" class="hover:text-yellow-400 transition">Menu</a></li>
     <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition">Contact</a></li>
     <li><a href="{{ route('legalitas') }}" class="hover:text-yellow-400 transition">Legalitas</a></li>
 

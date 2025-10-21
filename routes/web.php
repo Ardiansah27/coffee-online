@@ -8,56 +8,51 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\LandingController;
-
+use App\Http\Controllers\AdminController; // 🔸 TAMBAHAN ROLE ADMIN
 
 //////////////////////////////////////////
-// 🔹 Landing page / semua user bisa lihat
-
-
+// Landing page
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
-// Halaman lain tetap bisa diakses guest
-Route::get('/menu-guest', [MenuController::class, 'index'])
-    ->name('menu-guest'); // Nama route unik untuk guest
+// Menu untuk semua user (guest + login)
+Route::get('/menu', [MenuController::class, 'showMenu'])->name('menu');
 
-Route::get('/legalitas', function () {
-    return view('legalitas');
-})->name('legalitas');
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
-
-
+// Halaman legalitas & contact (semua user)
+Route::view('/legalitas', 'legalitas')->name('legalitas');
+Route::view('/contact', 'contact')->name('contact');
 
 //////////////////////////////////////////
-// 🔹 Halaman user login / home
+// Halaman user login (auth middleware)
 Route::middleware('auth')->group(function () {
-
-    // Halaman utama user (home.blade.php)
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-    Route::get('/menu', [MenuController::class, 'index'])->name('menu-login');
-    Route::get('/legalitas', function () {
-        return view('legalitas');
-    })->name('legalitas');
-    Route::get('/contact', function () {
-        return view('contact');
-    })->name('contact');
-
+    
     Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
     Route::post('/profil/alamat', [ProfilController::class, 'storeAlamat'])->name('profil.alamat.store');
     Route::delete('/profil/alamat/{id}', [ProfilController::class, 'deleteAlamat'])->name('profil.alamat.delete');
 
-
-    // Halaman beli / checkout
-    Route::get('/beli/{id}', function ($id) {
-        return view('beli', ['id' => $id]);
-    })->name('beli');
-
+    // Checkout
+    Route::get('/beli/{id}', fn($id) => view('beli', ['id' => $id]))->name('beli');
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+
+
+//////////////////////////////////////////
+// 🔸 TAMBAHAN ROLE ADMIN
+// Middleware 'auth' + custom middleware 'isAdmin'
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/menu', [AdminController::class, 'menu'])->name('admin.menu');
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::post('/admin/menu/add', [AdminController::class, 'addMenu'])->name('admin.menu.add');
+    Route::post('/admin/menu/update/{id}', [AdminController::class, 'updateMenu'])->name('admin.menu.update');
+    Route::delete('/admin/menu/delete/{id}', [AdminController::class, 'deleteMenu'])->name('admin.menu.delete');
+});
+
+
+
 
 //////////////////////////////////////////
 // 🔹 Login & Register
@@ -67,10 +62,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 
+
 //////////////////////////////////////////
 // 🔹 Google Login
 Route::get('/login/google', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
 
 //////////////////////////////////////////
 // 🔹 Fitur Lupa Password / Reset Password

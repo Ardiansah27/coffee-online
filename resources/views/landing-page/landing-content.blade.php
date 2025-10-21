@@ -28,7 +28,7 @@
 
     <!-- Tombol -->
     <div class="flex justify-center md:justify-end mt-8">
-      <a href="{{ route('menu-login') }}"
+      <a href="{{ route('menu') }}"
          class="bg-[#6f4e37] px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-white text-sm sm:text-base md:text-lg font-semibold hover:bg-[#5a3e2b] transition duration-300 shadow-md hover:shadow-lg">
         Lihat Menu
       </a>
@@ -129,12 +129,12 @@
       Setiap tegukan membawa kehangatan dan ketenangan. Temukan rasa yang bercerita, aroma yang menenangkan, dan momen kopi yang sempurna untuk memulai harimu.
     </p>
     <div class="pt-4 flex gap-4">
-      <button class="border border-yellow-300 text-yellow-300 font-semibold px-8 py-3 rounded-full hover:bg-yellow-200 hover:text-[#5a3d27] transition-all duration-300">
-        Lihat Semua
-      </button>
-      <button class="bg-yellow-300 text-[#5a3d27] font-semibold px-8 py-3 rounded-full hover:bg-yellow-200 shadow-md hover:shadow-lg transition-all duration-300">
-        Menu
-      </button>
+       <a href="{{ route('menu') }}" 
+   class="border border-yellow-300 text-yellow-300 font-semibold px-8 py-3 rounded-full 
+          hover:bg-yellow-200 hover:text-[#5a3d27] transition-all duration-300 inline-block">
+    Lihat Semua
+</a>
+
     </div>
   </div>
 

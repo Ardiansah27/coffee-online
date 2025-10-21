@@ -12,7 +12,7 @@ use Laravel\Socialite\Facades\Socialite;
 class AuthController extends Controller
 {
     // ===============================
-    // 1. Tampilkan form login
+    // 1. Form login
     // ===============================
     public function showLoginForm()
     {
@@ -20,7 +20,7 @@ class AuthController extends Controller
     }
 
     // ===============================
-    // 2. Proses login manual
+    // 2. Proses login manual (cek role)
     // ===============================
     public function login(Request $request)
     {
@@ -31,7 +31,14 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('home');
+            $user = Auth::user();
+
+            // Cek role dan redirect sesuai peran
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect()->route('home');
+            }
         }
 
         return back()->withErrors([
@@ -40,7 +47,7 @@ class AuthController extends Controller
     }
 
     // ===============================
-    // 3. Tampilkan form register
+    // 3. Form register
     // ===============================
     public function showRegisterForm()
     {
@@ -77,6 +84,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'role' => 'user', // default user
             'profile_picture' => null,
         ]);
 
@@ -93,7 +101,6 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('login');
     }
-
     // ===============================
     // 6. Login dengan Google
     // ===============================
@@ -110,27 +117,28 @@ class AuthController extends Controller
             $googleUser = $googleDriver->stateless()->user();
 
             // Buat user baru jika belum ada
-            $user = User::firstOrCreate(
+          $user = User::firstOrCreate(
                 ['email' => $googleUser->getEmail()],
                 [
                     'name' => $googleUser->getName(),
                     'google_id' => $googleUser->getId(),
-                    'password' => Hash::make(rand(100000, 999999)), // password acak
+                    'password' => Hash::make(rand(100000, 999999)),
                     'profile_picture' => $googleUser->getAvatar() ?? null,
+                    'role' => 'user', // default Google login jadi user
                 ]
             );
 
-            // Login user
             Auth::login($user);
-
-            // Hapus intended URL lama supaya tidak diarahkan ke /profil
             Session::forget('url.intended');
 
-            // Redirect ke home
-            return redirect()->route('home');
+            // Redirect sesuai role
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect()->route('home');
+            }
 
         } catch (\Exception $e) {
-            // Jika gagal, arahkan kembali ke login dengan pesan error
             return redirect()->route('login')->with('error', 'Gagal login menggunakan Google. Silakan coba lagi.');
         }
     }

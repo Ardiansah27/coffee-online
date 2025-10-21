@@ -9,10 +9,11 @@ class Menu extends Model
 {
     use HasFactory;
 
-    protected $table = 'menu_coffee'; // sesuaikan dengan nama tabel kamu
+    protected $table = 'menu_coffee';
 
     protected $fillable = [
         'name',
+        'category', // ✅ tambahkan ini
         'price',
         'description',
         'image'

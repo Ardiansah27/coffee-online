@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
-    public function index()
+    // Halaman menu untuk semua user (guest + login)
+    public function showMenu()
     {
-        // Ambil semua data menu dari database
-        $menu_coffe = Menu::all();
+        $menu_coffee = Menu::all(); // Ambil semua menu
+        $categories = Menu::select('category')->distinct()->pluck('category'); // Ambil kategori unik
 
-        // Kirim ke view menu.blade.php
-        return view('menu', compact('menu_coffe'));
+        // Gunakan satu view untuk semua user
+        return view('menu', compact('menu_coffee', 'categories'));
     }
 }
