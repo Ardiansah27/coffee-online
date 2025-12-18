@@ -125,6 +125,7 @@
 @yield('landing') 
      @yield('content')
         @yield('menu')
+        @yield('profil')
   </main>
 
 

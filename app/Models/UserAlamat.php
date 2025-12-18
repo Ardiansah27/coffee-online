@@ -10,6 +10,7 @@ class UserAlamat extends Model
     use HasFactory;
 
     protected $table = 'user_alamat';
+
     protected $fillable = [
         'user_id',
         'label',
@@ -18,12 +19,13 @@ class UserAlamat extends Model
         'alamat',
         'kota',
         'provinsi',
-        'kode_pos'
+        'kode_pos',
+        'is_utama',
     ];
 
     // Relasi ke user
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

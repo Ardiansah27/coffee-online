@@ -112,16 +112,44 @@
                     </div>
 
                     <!-- Order -->
-                    @if(auth()->check())
-                        <button class="btn-beli bg-[#6f4e37] text-white text-center py-1.5 sm:py-2 rounded-lg hover:bg-[#5a3e2b] transition text-xs sm:text-sm">
-                            Order Now
-                        </button>
-                    @else
-                        <a href="{{ route('login') }}"
-                           class="bg-[#6f4e37] text-white text-center py-1.5 sm:py-2 rounded-lg hover:bg-[#5a3e2b] transition text-xs sm:text-sm">
-                           Order Now
-                        </a>
-                    @endif
+                 @if(auth()->check())
+    <button
+        class="btn-beli 
+               bg-[#6f4e37] text-white 
+               text-center 
+               py-1.5 sm:py-2 
+               rounded-lg 
+               text-xs sm:text-sm
+               transition 
+               duration-200 
+               ease-out
+               transform
+               hover:scale-105
+               active:scale-95
+               hover:bg-[#5a3e2b]
+               focus:outline-none">
+        Order Now
+    </button>
+@else
+    <a href="{{ route('login') }}"
+       class="bg-[#6f4e37] text-white 
+              text-center 
+              py-1.5 sm:py-2 
+              rounded-lg 
+              text-xs sm:text-sm
+              transition 
+              duration-200 
+              ease-out
+              transform
+              hover:scale-105
+              active:scale-95
+              hover:bg-[#5a3e2b]
+              focus:outline-none
+              block">
+        Order Now
+    </a>
+@endif
+
                 </div>
             @endforeach
         </div>
@@ -195,33 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // === SISTEM BEST SELLER OTOMATIS ===
-    const bestSeller = JSON.parse(localStorage.getItem('bestseller') || '{}');
-    document.querySelectorAll('.menu-item').forEach(card => {
-        const id = card.dataset.id;
-        const beliBtn = card.querySelector('.btn-beli');
 
-        beliBtn?.addEventListener('click', () => {
-            if (!bestSeller[id]) bestSeller[id] = 0;
-            bestSeller[id]++;
-            localStorage.setItem('bestseller', JSON.stringify(bestSeller));
-
-            if (bestSeller[id] >= 10 && !card.querySelector('.best-seller')) {
-                const tag = document.createElement('span');
-                tag.className = 'best-seller bg-orange-500 text-white text-xs px-2 py-1 rounded ml-2';
-                tag.textContent = 'Best Seller';
-                card.querySelector('h3').appendChild(tag);
-            }
-        });
-
-        if (bestSeller[id] >= 10 && !card.querySelector('.best-seller')) {
-            const tag = document.createElement('span');
-            tag.className = 'best-seller bg-orange-500 text-white text-xs px-2 py-1 rounded ml-2';
-            tag.textContent = 'Best Seller';
-            card.querySelector('h3').appendChild(tag);
-        }
-    });
-});
 </script>
 
 <!-- Scroll Halus -->
@@ -242,5 +244,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Pastikan klik tombol order tidak ikut trigger link
+    const orderButtons = document.querySelectorAll('.btn-beli');
+    orderButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation(); // hentikan propagasi klik
+        });
+    });
+});
+</script>
+
 
 @endsection
