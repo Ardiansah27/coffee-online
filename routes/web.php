@@ -43,13 +43,22 @@ Route::middleware('auth')->group(function () {
 // 🔸 TAMBAHAN ROLE ADMIN
 // Middleware 'auth' + custom middleware 'isAdmin'
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/menu', [AdminController::class, 'menu'])->name('admin.menu');
-    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-    Route::post('/admin/menu/add', [AdminController::class, 'addMenu'])->name('admin.menu.add');
-    Route::post('/admin/menu/update/{id}', [AdminController::class, 'updateMenu'])->name('admin.menu.update');
-    Route::delete('/admin/menu/delete/{id}', [AdminController::class, 'deleteMenu'])->name('admin.menu.delete');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])
+        ->name('admin.dashboard');
+
+    Route::get('/admin/menu', [AdminController::class, 'menu'])
+        ->name('admin.menu');
+
+    Route::post('/admin/menu/add', [AdminController::class, 'addMenu'])
+        ->name('admin.menu.add');
+
+    Route::post('/admin/menu/update/{id}', [AdminController::class, 'updateMenu'])
+        ->name('admin.menu.update');
+
+    Route::delete('/admin/menu/delete/{id}', [AdminController::class, 'deleteMenu'])
+        ->name('admin.menu.delete');
 });
+
 
 
 

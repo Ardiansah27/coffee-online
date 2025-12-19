@@ -56,6 +56,7 @@
             @foreach($menu_coffee as $menu)
               <div 
   class="menu-item 
+   transition-opacity duration-300 ease-in-out opacity-100 
          bg-white 
          border-2 border-[#6f4e37]/30 
          rounded-2xl 
@@ -71,13 +72,14 @@
                     
                    @if(auth()->check())
     <a href="{{ route('menu', $menu->id) }}" class="mb-3">
-        <img src="{{ asset('uploads/'.$menu->image) }}" 
+          <img src="{{ asset('images/menu/'.$menu->image) }}" 
              alt="{{ $menu->name }}" 
              class="rounded-xl h-36 sm:h-48 w-full object-cover hover:scale-105 transition-transform duration-300">
     </a>
 @else
     <a href="{{ route('login') }}" class="mb-3">
-        <img src="{{ asset('uploads/'.$menu->image) }}" 
+          <img src="{{ asset('images/menu/'.$menu->image) }}" 
+       
              alt="{{ $menu->name }}" 
              class="rounded-xl h-36 sm:h-48 w-full object-cover hover:scale-105 transition-transform duration-300">
     </a>
@@ -88,7 +90,7 @@
                         {{ $menu->name }}
                     </h3>
 
-                    <p class="text-xs sm:text-sm text-gray-500 mb-1">{{ $menu->category }}</p>
+                   
 
                     <p class="text-sm sm:text-md font-bold text-[#6f4e37] ">
                         Rp {{ number_format($menu->price, 0, ',', '.') }}
@@ -158,28 +160,34 @@
 
 <!-- JavaScript -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// === FILTER KATEGORI DENGAN FADE ===
+const buttons = document.querySelectorAll('.filter-btn');
+const items = document.querySelectorAll('.menu-item');
 
-    // === FILTER KATEGORI ===
-    const buttons = document.querySelectorAll('.filter-btn');
-    const items = document.querySelectorAll('.menu-item');
+buttons.forEach(btn => {
+    btn.addEventListener('click', function() {
+        const category = this.dataset.category;
 
-    buttons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const category = this.dataset.category;
-            buttons.forEach(b => {
-                b.classList.remove('bg-green-900', 'text-white');
-                b.classList.add('bg-white', 'text-gray-700', 'border');
-            });
-            this.classList.add('bg-green-900', 'text-white');
-            this.classList.remove('bg-white', 'text-gray-700');
+        // Toggle style tombol aktif
+        buttons.forEach(b => {
+            b.classList.remove('bg-green-900', 'text-white');
+            b.classList.add('bg-white', 'text-gray-700', 'border');
+        });
+        this.classList.add('bg-green-900', 'text-white');
+        this.classList.remove('bg-white', 'text-gray-700');
 
-            items.forEach(item => {
-                item.style.display = (category === 'All' || item.dataset.category === category)
-                    ? 'flex' : 'none';
-            });
+        // Filter menu dengan fade
+        items.forEach(item => {
+            if (category === 'All' || item.dataset.category === category) {
+                item.style.display = 'flex';
+                setTimeout(() => item.classList.remove('opacity-0'), 10); // fade in
+            } else {
+                item.classList.add('opacity-0'); // fade out
+                setTimeout(() => item.style.display = 'none', 300); // setelah fade selesai
+            }
         });
     });
+});
 
     // === KUANTITAS PRODUK ===
     document.querySelectorAll('.menu-item').forEach(card => {
