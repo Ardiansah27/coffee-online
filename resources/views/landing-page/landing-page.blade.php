@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@yield('title', 'Coffee Bliss')</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>@yield('title', 'Coffee Sarongge')</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
 
@@ -55,11 +56,25 @@
 
         <div class="flex items-center justify-end gap-4 ml-auto">
             <!-- Keranjang -->
-            <li>
-                <a href="{{ route('home') }}" class="flex items-center gap-2 hover:text-[#a67b5b] hover:underline hover:font-bold transition-colors duration-300">
-                    <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-11 h-11">
-                </a>
-            </li>
+        <li>
+    <a href="{{ route('troli') }}" class="relative flex items-center hover:text-[#a67b5b] transition-colors duration-300">
+        
+        <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-11 h-11">
+
+        @auth
+            @php
+                $count = \App\Models\Cart::where('user_id', auth()->id())->count();
+            @endphp
+            
+            @if($count > 0)
+              <span class="cart-badge absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white shadow-sm {{ $count == 0 ? 'hidden' : '' }}">
+    {{ $count }}
+</span>
+            @endif
+        @endauth
+        
+    </a>
+</li>
 
             <!-- Logout -->
             <li>
@@ -75,44 +90,66 @@
 
 </ul>
 
-<!-- Mobile Menu -->
-<ul id="mobile-menu" class="md:hidden absolute top-full left-0 w-full flex-col space-y-2 px-4 pb-3 bg-white/90 backdrop-blur-md shadow-md transform -translate-y-2 opacity-0 pointer-events-none transition-all duration-300">
+
+<!-- mobile -->
+<ul id="mobile-menu" class="md:hidden absolute top-full left-0 w-full flex-col space-y-1 px-4 pb-6 bg-white/95 backdrop-blur-lg shadow-xl border-t border-gray-100 transform -translate-y-2 opacity-0 pointer-events-none transition-all duration-300 rounded-b-2xl">
     
     @guest
-        <li><a href="{{ route('landing') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
-        <li><a href="{{ route('menu') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
-        <li>
-            <a href="{{ route('login') }}" class="block py-2 bg-[#6f4e37] text-white rounded-lg text-center hover:bg-[#5a3e2b] transition-colors duration-300">
+        <div class="pt-4 pb-2 border-b border-gray-100 mb-2">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Main Menu</p>
+        </div>
+        <li><a href="{{ route('landing') }}" class="flex items-center px-3 py-3 text-[#6f4e37] hover:bg-[#6f4e37]/5 rounded-xl transition-all duration-300 font-medium">Home</a></li>
+        <li><a href="{{ route('menu') }}" class="flex items-center px-3 py-3 text-[#6f4e37] hover:bg-[#6f4e37]/5 rounded-xl transition-all duration-300 font-medium">Menu</a></li>
+        <li class="pt-2">
+            <a href="{{ route('login') }}" class="block w-full py-3 bg-[#6f4e37] text-white rounded-xl text-center font-bold shadow-lg shadow-[#6f4e37]/20 active:scale-95 transition-all duration-300">
                 Log In
             </a>
         </li>
     @endguest
 
     @auth
-        <li><a href="{{ route('home') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Home</a></li>
-        <li><a href="{{ route('menu') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Menu</a></li>
-        <li><a href="{{ route('legalitas') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Legalitas</a></li>
-        <li><a href="{{ route('contact') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Contact Us</a></li>
-        <li><a href="{{ route('profil') }}" class="block py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">Profil</a></li>
+        <div class="pt-4 pb-2 border-b border-gray-100 mb-2 flex items-center justify-between px-2">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">User Menu</p>
+            <span class="text-[10px] text-[#6f4e37] font-medium bg-[#6f4e37]/10 px-2 py-0.5 rounded-full">Member</span>
+        </div>
 
+        <li><a href="{{ route('home') }}" class="flex items-center px-3 py-3 text-[#6f4e37] hover:bg-[#6f4e37]/5 rounded-xl transition-all duration-300 font-medium">Home</a></li>
+        <li><a href="{{ route('menu') }}" class="flex items-center px-3 py-3 text-[#6f4e37] hover:bg-[#6f4e37]/5 rounded-xl transition-all duration-300 font-medium">Explore Menu</a></li>
+        <li><a href="{{ route('profil') }}" class="flex items-center px-3 py-3 text-[#6f4e37] hover:bg-[#6f4e37]/5 rounded-xl transition-all duration-300 font-medium">Profil Saya</a></li>
+        
         <li>
-            <a href="{{ route('home') }}" class="flex items-center gap-2 py-2 text-[#6f4e37] hover:text-[#a67b5b] transition-colors duration-300">
-              Keranjang
-                <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-6 h-6">
-                
+            <a href="{{ route('troli') }}" class="flex items-center justify-between px-3 py-3 bg-[#6f4e37]/5 rounded-xl text-[#6f4e37] hover:bg-[#6f4e37]/10 transition-all duration-300 group">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <img src="{{ asset('uploads/keranjang.png') }}" alt="Keranjang" class="w-6 h-6 group-hover:scale-110 transition-transform">
+                        @php $count = \App\Models\Cart::where('user_id', auth()->id())->count(); @endphp
+                        @if($count > 0)
+                            <span class="cart-badge absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center border border-white">
+    {{ $count }}
+</span>
+                        @endif
+                    </div>
+                    <span class="font-medium">Keranjang Belanja</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </a>
         </li>
 
-        <li>
+        <div class="pt-4 pb-2 border-b border-gray-100 my-2 px-2">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Lainnya</p>
+        </div>
+        <li><a href="{{ route('legalitas') }}" class="flex items-center px-3 py-2 text-[#6f4e37]/80 hover:text-[#6f4e37] transition-all">Legalitas</a></li>
+        <li><a href="{{ route('contact') }}" class="flex items-center px-3 py-2 text-[#6f4e37]/80 hover:text-[#6f4e37] transition-all">Hubungi Kami</a></li>
+
+        <li class="pt-4">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="block py-2 bg-[#6f4e37] text-white rounded-lg text-center hover:bg-[#5a3e2b] transition-colors duration-300">
-                    Logout
+                <button type="submit" class="w-full py-3 border-2 border-[#6f4e37] text-[#6f4e37] rounded-xl text-center font-bold hover:bg-[#6f4e37] hover:text-white active:scale-95 transition-all duration-300">
+                    Log Out
                 </button>
             </form>
         </li>
     @endauth
-
 </ul>
 </nav>
 </div>

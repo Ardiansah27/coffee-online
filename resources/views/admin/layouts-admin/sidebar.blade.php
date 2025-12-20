@@ -29,11 +29,15 @@
     </nav>
 
     <div class="p-4 mt-auto border-t border-gray-800 space-y-3">
-        <a href="#" class="flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-500 transition-all group">
+  {{-- Form Logout --}}
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="w-full flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-500 transition-all group outline-none">
+            {{-- Icon Pintu --}}
             <span class="text-xl group-hover:translate-x-1 transition-transform">🚪</span>
+            {{-- Teks --}}
             <span class="font-medium text-[15px]">Logout</span>
-        </a>
-
-   
+        </button>
+    </form>
     </div>
 </aside>

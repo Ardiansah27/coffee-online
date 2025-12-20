@@ -9,6 +9,7 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AdminController; // 🔸 TAMBAHAN ROLE ADMIN
+use App\Http\Controllers\CartController;
 
 //////////////////////////////////////////
 // Landing page
@@ -25,7 +26,20 @@ Route::view('/contact', 'contact')->name('contact');
 // Halaman user login (auth middleware)
 Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::middleware(['auth'])->group(function () {
+    // Menampilkan halaman troli (URL: /cart, Nama Route: troli)
+    Route::get('/cart', [CartController::class, 'index'])->name('troli');
     
+    // Menambah produk ke troli
+    Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('troli.add');
+    
+    // Menghapus satu item dari troli
+    Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('troli.remove');
+    
+    // Update kuantitas
+    Route::patch('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('troli.update');
+    
+});
     Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
     Route::post('/profil/alamat', [ProfilController::class, 'storeAlamat'])->name('profil.alamat.store');
     Route::delete('/profil/alamat/{id}', [ProfilController::class, 'deleteAlamat'])->name('profil.alamat.delete');
