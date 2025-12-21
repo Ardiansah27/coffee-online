@@ -24,6 +24,13 @@
             <span class="text-xl group-hover:scale-110 transition-transform">☕</span>
             <span class="font-medium text-[15px]">Menu Coffee</span>
         </a>
+
+        {{-- Menu Lokasi Resto --}}
+<a href="{{ route('admin.resto.index') }}" 
+    class="flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-200 hover:bg-[#1d1f2b] group {{ request()->routeIs('admin.resto.*') ? 'bg-indigo-600 text-white hover:bg-indigo-600' : '' }}">
+    <span class="text-xl group-hover:scale-110 transition-transform">📍</span>
+    <span class="font-medium text-[15px]">Lokasi Resto</span>
+</a>
         
         
     </nav>

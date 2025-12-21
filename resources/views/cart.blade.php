@@ -91,9 +91,10 @@
     </div>
 </div>
 
-                        <button class="w-full bg-[#6f4e37] text-white py-4 rounded-2xl font-bold shadow-lg shadow-[#6f4e37]/20 hover:bg-[#5a3e2b] transition active:scale-95">
-                            Checkout Sekarang
-                        </button>
+               <a href="{{ route('checkout') }}" 
+   class="block text-center w-full bg-[#6f4e37] text-white py-4 rounded-2xl font-bold shadow-lg shadow-[#6f4e37]/20 hover:bg-[#5a3e2b] transition active:scale-95">
+    Checkout Sekarang
+</a>
                         
                         <p class="text-[10px] text-gray-400 text-center mt-4 italic">
                             *Harga sudah termasuk pajak & kenangan manis.

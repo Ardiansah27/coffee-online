@@ -88,14 +88,47 @@ public function updateQuantity(Request $request, $id)
     ], 404);
 }
 
-
-
-
-
-
-
+public function checkout()
+{
+    // 1. Ambil item keranjang
+    $cart_items = Cart::where('user_id', Auth::id())->with('menu')->get();
     
+    // 2. Ambil SEMUA alamat user
+    $user_addresses = \App\Models\UserAlamat::where('user_id', Auth::id())->get();
+    
+    // 3. Tentukan Selected Address
+    $selected_address = $user_addresses->first();
 
+    // 4. Hitung Subtotal
+    $subtotal = $cart_items->sum(fn($i) => $i->quantity * $i->menu->price);
+
+    // --- LOGIKA ONGKIR BARU ---
+    // Cek jika ada alamat, ambil jaraknya. Jika tidak ada, default 0 km.
+    $jarak = $selected_address ? $selected_address->jarak : 0;
+
+    // Batasi jarak maksimal 7 km
+    if ($jarak > 7) {
+        $jarak_hitung = 7;
+    } else {
+        $jarak_hitung = $jarak;
+    }
+
+    // Hitung ongkir: Jarak x 2000
+    $ongkir = $jarak_hitung * 2000;
+    
+    $total_pembayaran = $subtotal + $ongkir;
+
+    // 5. Kirim ke view
+    return view('checkout', compact(
+        'cart_items', 
+        'user_addresses', 
+        'selected_address', 
+        'subtotal', 
+        'ongkir', 
+        'total_pembayaran',
+        //'jarak' // Opsional: kirim data jarak untuk ditampilkan di struk
+    ));
+}
     // Menghapus item
     public function removeFromCart($id)
     {

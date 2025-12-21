@@ -10,7 +10,7 @@ use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AdminController; // 🔸 TAMBAHAN ROLE ADMIN
 use App\Http\Controllers\CartController;
-
+use App\Http\Controllers\Admin\RestoController;
 //////////////////////////////////////////
 // Landing page
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -22,34 +22,45 @@ Route::get('/menu', [MenuController::class, 'showMenu'])->name('menu');
 Route::view('/legalitas', 'legalitas')->name('legalitas');
 Route::view('/contact', 'contact')->name('contact');
 
+
 //////////////////////////////////////////
 // Halaman user login (auth middleware)
 Route::middleware('auth')->group(function () {
+    
+    // Home & Logout
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::middleware(['auth'])->group(function () {
-    // Menampilkan halaman troli (URL: /cart, Nama Route: troli)
-    Route::get('/cart', [CartController::class, 'index'])->name('troli');
-    
-    // Menambah produk ke troli
-    Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('troli.add');
-    
-    // Menghapus satu item dari troli
-    Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('troli.remove');
-    
-    // Update kuantitas
-    Route::patch('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('troli.update');
-    
-});
-    Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
-    Route::post('/profil/alamat', [ProfilController::class, 'storeAlamat'])->name('profil.alamat.store');
-    Route::delete('/profil/alamat/{id}', [ProfilController::class, 'deleteAlamat'])->name('profil.alamat.delete');
-
-    // Checkout
-    Route::get('/beli/{id}', fn($id) => view('beli', ['id' => $id]))->name('beli');
-
-    // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Keranjang Belanja (Troli)
+    Route::get('/cart', [CartController::class, 'index'])->name('troli');
+    Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('troli.add');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('troli.remove');
+    Route::patch('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('troli.update');
+
+  // Profil & Manajemen Alamat (ProfilController)
+Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+Route::post('/profil/update', [ProfilController::class, 'updateProfil'])->name('profil.update');
+
+// 1. Halaman Form Tambah Alamat (Pindah Halaman)
+Route::get('/profil/alamat/tambah', [ProfilController::class, 'createAlamat'])->name('profil.alamat.create');
+
+// 2. Proses Simpan ke Database
+Route::post('/profil/alamat/store', [ProfilController::class, 'storeAlamat'])->name('profil.alamat.store');
+
+// 3. Hapus Alamat
+Route::delete('/profil/alamat/{id}', [ProfilController::class, 'deleteAlamat'])->name('profil.alamat.delete');
+
+// 4. Set Alamat Utama
+Route::post('/profil/alamat-utama/{id}', [ProfilController::class, 'setAlamatUtama'])->name('profil.alamat.utama');
+
+    // Checkout & Transaksi
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::get('/beli/{id}', [CartController::class, 'beliLangsung'])->name('beli');
+       // Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 });
+ 
 
 
 
@@ -73,6 +84,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.menu.delete');
 });
 
+// Route untuk tampilkan halaman dan simpan lokasi resto
+Route::get('/admin/resto-setting', [App\Http\Controllers\Admin\RestoController::class, 'index'])->name('admin.resto.index');
+Route::post('/admin/resto-setting', [App\Http\Controllers\Admin\RestoController::class, 'update'])->name('admin.resto.update');
 
 
 

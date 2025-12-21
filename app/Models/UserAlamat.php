@@ -11,17 +11,20 @@ class UserAlamat extends Model
 
     protected $table = 'user_alamat';
 
-    protected $fillable = [
-        'user_id',
-        'label',
-        'penerima',
-        'telepon',
-        'alamat',
-        'kota',
-        'provinsi',
-        'kode_pos',
-        'is_utama',
-    ];
+   protected $fillable = [
+    'user_id', 
+    'label_alamat', 
+    'nama_penerima', 
+    'no_telepon', 
+    'alamat_lengkap', 
+    'kota', 
+    'provinsi', 
+    'kode_pos', 
+    'latitude', 
+    'longitude', 
+    'jarak', 
+    'is_utama'
+];
 
     // Relasi ke user
     public function user()
