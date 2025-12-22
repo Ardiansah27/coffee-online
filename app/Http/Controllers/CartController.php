@@ -96,8 +96,13 @@ public function checkout()
     // 2. Ambil SEMUA alamat user
     $user_addresses = \App\Models\UserAlamat::where('user_id', Auth::id())->get();
     
-    // 3. Tentukan Selected Address
+  // 3. Tentukan Selected Address (Cari yang is_utama dulu)
+$selected_address = $user_addresses->where('is_utama', 1)->first();
+
+// Jika ternyata tidak ada satupun yang is_utama, baru ambil yang pertama sebagai cadangan
+if (!$selected_address) {
     $selected_address = $user_addresses->first();
+}
 
     // 4. Hitung Subtotal
     $subtotal = $cart_items->sum(fn($i) => $i->quantity * $i->menu->price);

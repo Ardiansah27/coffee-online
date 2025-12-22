@@ -4,20 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <title>@yield('title', 'Coffee Sarongge')</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-o9N1j8r3Qj7gm3VJJi4tpMKn0HliVJGgkF69ZHKz9nM=" crossorigin="" />
-
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-o2PcBl+1kQ0Q1gQZGguwSlKwX4+vjyQ1Y+47kW2vRFE=" crossorigin=""></script>
+<!-- Leaflet (GRATIS) -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+ 
 
 </head>
+
 <body class="bg-[#f9f5f0] text-[#4b2e12] overflow-x-hidden">
 
 <!-- Navbar -->
@@ -265,7 +271,12 @@
   });
 </script>
 
+@stack('scripts')
 
+
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
 </body>
 </html>

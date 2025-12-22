@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class ProfilController extends Controller
 {
-   public function index()
+public function index()
 {
     $user = Auth::user();
     $alamat = UserAlamat::where('user_id', $user->id)->get();
-    
-    // Ambil data resto pertama
-    $resto = DB::table('resto_settings')->first(); 
+    $resto = DB::table('resto_settings')->first(); // Ambil koordinat resto
 
     return view('profil', compact('user', 'alamat', 'resto'));
 }
@@ -41,9 +39,9 @@ public function storeAlamat(Request $request)
             'nama_penerima'  => $request->penerima,
             'no_telepon'     => $request->telepon,
             'alamat_lengkap' => $request->alamat,
-            'kota'           => $request->kota,
-            'provinsi'       => $request->provinsi,
-            'kode_pos'       => $request->kode_pos,
+            'kota'           => $request->kota ?? null,
+            'provinsi'       => $request->provinsi ?? null,
+            'kode_pos'       => $request->kode_pos ?? null,
             'latitude'       => $request->latitude, // Simpan latitude
             'longitude'      => $request->longitude, // Simpan longitude
             'jarak'          => $request->jarak,
@@ -51,10 +49,11 @@ public function storeAlamat(Request $request)
             'is_utama'       => UserAlamat::where('user_id', auth()->id())->count() == 0 ? 1 : 0,
         ]);
 
-        return response()->json([
-            'success' => 'Alamat berhasil disimpan!',
-            'alamat'  => $alamat
-        ]);
+      return response()->json([
+    'success' => true,
+    'message' => 'Alamat berhasil disimpan!',
+   // 'redirect' => route('profil') // Pastikan baris ini ada dan benar
+]);
 
     } catch (\Exception $e) {
         return response()->json([
