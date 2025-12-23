@@ -86,6 +86,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::delete('/admin/menu/delete/{id}', [AdminController::class, 'deleteMenu'])
         ->name('admin.menu.delete');
+
+    Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
+    Route::patch('/orders/{id}/status', [AdminController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+
 });
 
 // Route untuk tampilkan halaman dan simpan lokasi resto

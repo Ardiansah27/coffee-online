@@ -91,9 +91,13 @@ public function updateQuantity(Request $request, $id)
         'message' => 'Item tidak ditemukan'
     ], 404);
 }
+
+
 public function checkout()
     {
-        $cart_items = Cart::where('user_id', Auth::id())->with('menu')->get();
+
+        // Pastikan menggunakan with('menu') agar data produk terbawa
+    $cart_items = Cart::where('user_id', Auth::id())->with('menu')->get();
         $user_addresses = UserAlamat::where('user_id', Auth::id())->get();
         
         $selected_address = $user_addresses->where('is_utama', 1)->first() ?: $user_addresses->first();
@@ -112,55 +116,54 @@ public function checkout()
             'subtotal', 'ongkir', 'total_pembayaran'
         ));
     }
+public function processCheckout(Request $request)
+{
+    $request->validate([
+        'alamat_id' => 'required',
+    ]);
 
-    public function processCheckout(Request $request)
-    {
-        $request->validate([
-            'alamat_id' => 'required',
-        ]);
+    $user = Auth::user();
+    $cartItems = Cart::where('user_id', $user->id)->with('menu')->get();
 
-        $user = Auth::user();
-        // Sesuai dengan fungsi checkout, gunakan with('menu')
-        $cartItems = Cart::where('user_id', $user->id)->with('menu')->get();
-
-        if ($cartItems->isEmpty()) {
-            return redirect()->back()->with('error', 'Keranjang Anda kosong.');
-        }
-
-        $alamat = UserAlamat::findOrFail($request->alamat_id);
-        
-        // Hitung ulang biaya untuk keamanan database
-        $subtotal = $cartItems->sum(fn($item) => $item->menu->price * $item->quantity);
-        $ongkir = min(7, $alamat->jarak) * 2000; 
-
-        // 1. Simpan ke tabel Orders
-        $order = Order::create([
-            'user_id' => $user->id,
-            'alamat_id' => $request->alamat_id,
-            'order_number' => 'SRG-' . strtoupper(Str::random(10)),
-            'subtotal' => $subtotal,
-            'ongkir' => $ongkir,
-            'total_pembayaran' => $subtotal + $ongkir,
-            'payment_method' => 'COD',
-            'status' => 'pending',
-        ]);
-
-        // 2. Simpan ke tabel Order Items
-        foreach ($cartItems as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item->menu_id, // Pastikan ini menu_id sesuai tabel Cart
-                'quantity' => $item->quantity,
-                'price' => $item->menu->price, 
-            ]);
-        }
-
-        // 3. Kosongkan Keranjang
-        Cart::where('user_id', $user->id)->delete();
-
-        return redirect()->route('home')->with('success', 'Pesanan berhasil dibuat! Admin akan segera memproses.');
+    if ($cartItems->isEmpty()) {
+        return redirect()->back()->with('error', 'Keranjang Anda kosong.');
     }
 
+    $alamat = UserAlamat::findOrFail($request->alamat_id);
+    
+    // Gunakan filter() untuk memastikan hanya item yang punya menu yang dihitung
+    $validItems = $cartItems->filter(fn($item) => $item->menu != null);
+    
+    $subtotal = $validItems->sum(fn($item) => $item->menu->price * $item->quantity);
+    $ongkir = min(7, $alamat->jarak) * 2000; 
+
+    // 1. Simpan ke tabel Orders
+    $order = Order::create([
+        'user_id' => $user->id,
+        'alamat_id' => $request->alamat_id,
+        'order_number' => 'SRG-' . strtoupper(Str::random(10)),
+        'subtotal' => $subtotal,
+        'ongkir' => $ongkir,
+        'total_pembayaran' => $subtotal + $ongkir,
+        'payment_method' => 'COD',
+        'status' => 'pending',
+    ]);
+
+    // 2. Simpan ke tabel Order Items
+    foreach ($validItems as $item) {
+        OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $item->menu_id, 
+            'quantity' => $item->quantity,
+            'price' => $item->menu->price, 
+        ]);
+    }
+
+    // 3. Kosongkan Keranjang
+    Cart::where('user_id', $user->id)->delete();
+
+    return redirect()->route('home')->with('success', 'Pesanan berhasil dibuat!');
+}
     public function removeFromCart($id)
     {
         Cart::where('user_id', Auth::id())->where('id', $id)->delete();

@@ -77,56 +77,71 @@
         </div>
     </div>
 </div>
-
-                {{-- 2. PRODUK PESANAN (Tampilan Shopee & Nama Kolom Database Disesuaikan) --}}
-                <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
-                    <div class="p-4 border-b bg-gray-50/50">
-                        <h3 class="font-bold text-gray-800">Produk Dipesan</h3>
-                    </div>
-                    <div class="divide-y divide-gray-100">
-                    {{-- Loop produk dengan proteksi data null --}}
-@foreach($cart_items as $item)
-    {{-- Cek apakah data produk tersedia --}}
-    @if($item->produk) 
-    <div class="p-4 flex gap-4 items-center">
-        {{-- Foto Produk dengan Fallback jika file tidak ada --}}
-        @if($item->produk->image)
-            <img src="{{ asset('storage/' . $item->produk->image) }}" 
-                 class="w-20 h-20 object-cover rounded-xl border border-gray-100 shadow-sm" 
-                 alt="{{ $item->produk->name }}">
-        @else
-            <div class="w-20 h-20 bg-gray-200 rounded-xl flex items-center justify-center text-[10px] text-gray-400">
-                No Image
-            </div>
-        @endif
-        
-        <div class="flex-1">
-            <h4 class="font-bold text-gray-800 text-lg line-clamp-1">{{ $item->produk->name }}</h4>
-            <p class="text-xs text-gray-400">Kategori: {{ $item->produk->category ?? 'Umum' }}</p>
-            
-            <div class="flex justify-between items-end mt-2">
-                <p class="text-[#6f4e37] font-black text-base">
-                    Rp {{ number_format($item->produk->price, 0, ',', '.') }}
-                </p>
-                <p class="text-sm font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                    x{{ $item->quantity }}
-                </p>
-            </div>
-        </div>
+{{-- 2. PRODUK PESANAN --}}
+<div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+    <div class="p-4 border-b bg-gray-50/50 text-gray-800 font-bold uppercase text-xs tracking-widest">
+        Produk Dipesan
     </div>
+    <div class="divide-y divide-gray-100">
+        @forelse($cart_items as $item)
+            {{-- Pastikan menggunakan $item->menu sesuai relasi di controller --}}
+            @if($item->menu)
+                <div class="p-4 flex gap-4 items-center">
+                    {{-- Gambar Produk --}}
+                    <div class="relative">
+    {{-- Mengarah langsung ke public/images/menu/ --}}
+    @if($item->menu && $item->menu->image)
+        <img src="{{ asset('images/menu/' . $item->menu->image) }}" 
+             class="w-20 h-20 object-cover rounded-xl border border-gray-100 shadow-sm" 
+             alt="{{ $item->menu->name }}"
+             onerror="this.onerror=null;this.src='{{ asset('images/default-coffee.jpg') }}';">
     @else
-        {{-- Jika produk sudah dihapus dari database tapi masih ada di keranjang --}}
-        <div class="p-4 bg-red-50 text-red-500 text-xs italic">
-            Satu produk tidak tersedia lagi dan akan diabaikan dari pesanan.
+        <div class="w-20 h-20 bg-gray-200 rounded-xl flex items-center justify-center">
+             <span class="text-[10px] text-gray-400">No Image</span>
         </div>
     @endif
-@endforeach
-                    </div>
-                    <div class="p-4 bg-stone-50 border-t flex justify-between items-center text-sm italic text-gray-500">
-                        <span>Opsi Pengiriman: <strong class="text-gray-700">Reguler (Kurir Toko)</strong></span>
-                        <span class="font-bold text-[#6f4e37]">Otomatis</span>
+    
+    <span class="absolute -top-2 -right-2 bg-[#6f4e37] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+        x{{ $item->quantity }}
+    </span>
+</div>
+                    
+                    <div class="flex-1">
+                        <h4 class="font-bold text-gray-800 text-lg line-clamp-1">{{ $item->menu->name }}</h4>
+                        <p class="text-xs text-gray-400 capitalize">Kategori: {{ $item->menu->category ?? 'Minuman' }}</p>
+                        
+                        <div class="flex justify-between items-center mt-2">
+                            <p class="text-[#6f4e37] font-black text-base">
+                                Rp {{ number_format($item->menu->price, 0, ',', '.') }}
+                            </p>
+                            <p class="text-xs font-medium text-gray-400">
+                                Subtotal: Rp {{ number_format($item->menu->price * $item->quantity, 0, ',', '.') }}
+                            </p>
+                        </div>
                     </div>
                 </div>
+            @else
+                {{-- Ini akan muncul jika data di tabel menu_coffee tidak ditemukan --}}
+                <div class="p-4 bg-red-50 flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="text-red-500 text-xs italic font-medium">Data produk sudah tidak tersedia di menu.</p>
+                </div>
+            @endif
+        @empty
+            <div class="p-10 text-center">
+                <p class="text-gray-400 text-sm">Keranjang belanja Anda kosong.</p>
+            </div>
+        @endforelse
+    </div>
+    
+    <div class="p-4 bg-stone-50 border-t flex justify-between items-center text-sm">
+        <span class="text-gray-500 italic">Opsi Pengiriman: <strong class="text-gray-700">Reguler (Kurir Toko)</strong></span>
+        <span class="font-bold text-[#6f4e37] bg-white px-3 py-1 rounded-lg shadow-sm border border-stone-100">Otomatis</span>
+    </div>
+</div>
+
 
                 {{-- 3. METODE PEMBAYARAN (COD) --}}
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
