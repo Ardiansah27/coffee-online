@@ -94,16 +94,22 @@
         <svg id="moonIcon" class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
     </button>
 </div>
+
+<button id="btnLokasiSaya" type="button">
+    <svg class="w-4 h-4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+    </svg>
+    <span>LOKASI SAYA</span>
+</button>
                         <div id="googleMap" class="w-full h-full"></div>
                         
                         {{-- Tombol Lokasi Saya --}}
-                        <button type="button" id="btnLokasiSaya" class="absolute top-4 right-4 z-[40] bg-white/95 backdrop-blur-md text-[#6f4e37] px-4 py-2.5 rounded-xl shadow-xl hover:bg-[#6f4e37] hover:text-white transition-all duration-500 font-bold text-[10px] flex items-center gap-2 border border-stone-100 active:scale-95">
-                            <span class="relative flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#6f4e37] opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-[#6f4e37]"></span>
-                            </span>
-                            LOKASI SAYA
-                        </button>
+    <button id="btnLokasiSaya" type="button" class="flex items-center">
+    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+    </svg>
+    <span>LOKASI SAYA</span>
+</button>
                     </div>
 
                     {{-- Action Buttons --}}
@@ -129,6 +135,92 @@
 </div>
 @endsection
 
+
+<style>
+ /* KANAN ATAS – MENTOK & RAPI */
+.leaflet-top.leaflet-right {
+    top: 12px !important;
+    right: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 10px !important;
+}
+
+/* Reset margin default Leaflet */
+.leaflet-top.leaflet-right .leaflet-control {
+    margin: 0 !important;
+    clear: none !important;
+}
+
+
+    /* 2. Styling Tombol Pencarian Bundar Cokelat (Gambar 2 & 6) */
+    .leaflet-control-geocoder-icon {
+        background-color: #6f4e37 !important;
+        border-radius: 50% !important;
+        width: 42px !important;
+        height: 42px !important;
+        border: 2px solid #ffffff !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E") !important;
+        background-size: 22px !important;
+        background-position: center !important;
+    }
+
+    /* 3. Kolom Input Pencarian (Gambar 3 & 6) */
+    .leaflet-control-geocoder-form {
+        position: absolute;
+        right: 50px; /* Muncul di kiri tombol bundar */
+        top: 2px;
+        background: white !important;
+        border: 2px solid #6f4e37 !important;
+        border-radius: 20px !important;
+        padding: 5px 15px !important;
+        width: 240px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    }
+
+    /* 4. Tombol Lokasi Saya (Kanan Bawah - Gambar 1, 2, 4) */
+    .leaflet-bottom.leaflet-right {
+        margin-bottom: 25px !important;
+        margin-right: 12px !important;
+    }
+
+    #btnLokasiSaya {
+        background-color: #6f4e37 !important;
+        color: white !important; /* Diubah ke putih agar lebih profesional */
+        padding: 10px 16px !important;
+        border-radius: 8px !important;
+        font-weight: 800 !important;
+        font-size: 11px !important;
+        border: 2px solid #ffffff !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25) !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+    }
+
+    /* Style Icon Pin di dalam Tombol Lokasi */
+    #btnLokasiSaya svg {
+        width: 16px;
+        height: 16px;
+        fill: white !important;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -149,7 +241,6 @@ function setupFormSubmit() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // 1. Loading dengan aksen cokelat
         Swal.fire({
             title: 'Menyimpan...',
             text: 'Sedang memproses alamat Anda',
@@ -175,7 +266,6 @@ function setupFormSubmit() {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                // 2. Berhasil - Tema Coffee
                 Swal.fire({
                     icon: 'success',
                     iconColor: '#6f4e37',
@@ -187,7 +277,6 @@ function setupFormSubmit() {
                     confirmButtonText: 'MANTAP!',
                     confirmButtonColor: '#6f4e37',
                 }).then(() => {
-                    // Cek jika ada redirect dari server, jika tidak ada tetap di halaman & reset
                     if (data.redirect) {
                         window.location.href = data.redirect;
                     } else {
@@ -197,7 +286,6 @@ function setupFormSubmit() {
                     }
                 });
             } else {
-                // 3. Gagal Validasi
                 Swal.fire({ 
                     icon: 'error', 
                     title: 'Gagal', 
@@ -218,20 +306,16 @@ function setupFormSubmit() {
     });
 }
 
+
 function initLeafletMap() {
     const mapElement = document.getElementById("googleMap");
     if (!mapElement) return;
 
     const googleRoadmap = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        attribution: 'Google Maps'
+        maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'], attribution: 'Google Maps'
     });
-
     const googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        attribution: 'Google Satellite'
+        maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'], attribution: 'Google Satellite'
     });
 
     map = L.map(mapElement, {
@@ -240,71 +324,138 @@ function initLeafletMap() {
         layers: [googleRoadmap]
     });
 
+    // 1. Kontrol Layer Satelit (Kanan Atas)
     L.control.layers({
         "Google Maps": googleRoadmap,
         "Satelit": googleSatellite
     }, null, { position: 'topright' }).addTo(map);
 
+    // 2. Kontrol Mode Gelap (Kanan Atas - Muncul di bawah Satelit)
+    setupThemeToggle();
+
+    // 3. Kolom Pencarian / Geocoder (Kanan Atas - Muncul di bawah Mode Gelap)
+    if (typeof L.Control.Geocoder !== 'undefined') {
+        const geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false,
+            placeholder: "Cari lokasi...",
+            position: 'topright', // Di bawah Mode Gelap
+            collapsed: true       // Aktifkan mode Klik-Muncul-Klik-Hilang
+        })
+        .on('markgeocode', function(e) {
+            const latlng = e.geocode.center;
+            updatePosition(latlng.lat, latlng.lng);
+            map.flyTo(latlng, 17);
+            
+            // Otomatis tutup kolom setelah cari (Opsional)
+            geocoder._collapse(); 
+        })
+        .addTo(map);
+    }
+
+    // 4. Kontrol Lokasi Saya (Kanan Bawah)
+    setupGeolocation();
+
+    // Marker Custom & Event Handling (Tetap sama)
     const customIcon = L.divIcon({
         html: `<div class="bg-[#6f4e37] w-10 h-10 rounded-full border-4 border-white shadow-2xl flex items-center justify-center text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg></div>`,
-        className: '',
-        iconSize: [40, 40],
-        iconAnchor: [20, 40]
+        className: '', iconSize: [40, 40], iconAnchor: [20, 40]
     });
-
     marker = L.marker([restoLat, restoLng], { draggable: true, icon: customIcon }).addTo(map);
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const userLat = pos.coords.latitude;
-                const userLng = pos.coords.longitude;
-                updatePosition(userLat, userLng);
-                map.setView([userLat, userLng], 16);
-            },
-            (error) => {
-                updatePosition(restoLat, restoLng);
-            }
-        );
-    } else {
-        updatePosition(restoLat, restoLng);
-    }
 
     map.on('click', (e) => updatePosition(e.latlng.lat, e.latlng.lng));
     marker.on('dragend', (e) => updatePosition(e.target.getLatLng().lat, e.target.getLatLng().lng));
 
-    setupThemeToggle();
-    setupGeolocation();
     setupFormSubmit(); 
 }
-
 function setupThemeToggle() {
     const btn = document.getElementById('toggleTheme');
     if (!btn) return;
-    const moon = document.getElementById('moonIcon');
-    const sun = document.getElementById('sunIcon');
-    
+
+    const ThemeControl = L.Control.extend({
+        options: { position: 'topright' }, // Di bawah tombol satelit
+        onAdd: function() {
+            const div = L.DomUtil.create('div', 'mt-2'); // mt-2 memberi jarak visual
+            div.appendChild(btn);
+            return div;
+        }
+    });
+    map.addControl(new ThemeControl());
+
     btn.addEventListener('click', () => {
         const isDark = document.documentElement.classList.toggle('dark');
-        moon.classList.toggle('hidden');
-        sun.classList.toggle('hidden');
-        document.getElementById('googleMap').style.filter = isDark ? 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)' : 'none';
+        document.getElementById('moonIcon').classList.toggle('hidden');
+        document.getElementById('sunIcon').classList.toggle('hidden');
+        document.getElementById('googleMap').style.filter = isDark ? 
+            'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)' : 'none';
     });
 }
 
 function setupGeolocation() {
     const btn = document.getElementById('btnLokasiSaya');
     if (!btn) return;
+
+    // Masukkan tombol ke sistem kontrol Leaflet di Kanan Bawah
+    const LocationControl = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function() {
+            const container = L.DomUtil.create('div', 'custom-location-wrapper');
+            container.appendChild(btn);
+            return container;
+        }
+    });
+    map.addControl(new LocationControl());
+
     btn.addEventListener('click', () => {
         if (!navigator.geolocation) return alert('GPS tidak didukung');
+        
+        const originalContent = btn.innerHTML;
         btn.innerHTML = 'Mencari...';
+
         navigator.geolocation.getCurrentPosition((pos) => {
             updatePosition(pos.coords.latitude, pos.coords.longitude);
             map.flyTo([pos.coords.latitude, pos.coords.longitude], 17);
-            btn.innerHTML = 'DETEKSI LOKASI SAYA';
+            btn.innerHTML = originalContent;
         }, () => {
             alert('Gagal mendeteksi lokasi');
-            btn.innerHTML = 'DETEKSI LOKASI SAYA';
+            btn.innerHTML = originalContent;
+        });
+    });
+}
+
+function setupGeolocation() {
+    const btn = document.getElementById('btnLokasiSaya');
+    if (!btn) return;
+
+    // Membuat Kontrol Leaflet Kustom
+    const LocationControl = L.Control.extend({
+        options: { 
+            position: 'bottomright' // Menentukan posisi di kanan bawah
+        },
+        onAdd: function() {
+            // Kita bungkus tombol di dalam div agar margin dan tata letaknya konsisten
+            const container = L.DomUtil.create('div', 'leaflet-custom-control');
+            container.appendChild(btn);
+            return container;
+        }
+    });
+
+    // Masukkan ke dalam map
+    map.addControl(new LocationControl());
+
+    // Logika deteksi lokasi tetap sama
+    btn.addEventListener('click', () => {
+        if (!navigator.geolocation) return alert('GPS tidak didukung');
+        
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Mencari...';
+
+        navigator.geolocation.getCurrentPosition((pos) => {
+            updatePosition(pos.coords.latitude, pos.coords.longitude);
+            map.flyTo([pos.coords.latitude, pos.coords.longitude], 17);
+            btn.innerHTML = originalText;
+        }, () => {
+            alert('Gagal mendeteksi lokasi');
+            btn.innerHTML = originalText;
         });
     });
 }
@@ -315,14 +466,18 @@ function updatePosition(lat, lng) {
     document.getElementById('lng').value = lng;
 
     const distanceKm = hitungJarak(restoLat, restoLng, lat, lng).toFixed(1);
-    document.getElementById('jarak_input').value = distanceKm;
-    document.getElementById('distance-badge').innerText = `Jarak: ${distanceKm} KM`;
+    const jarakInput = document.getElementById('jarak_input');
+    const distanceBadge = document.getElementById('distance-badge');
+    
+    if(jarakInput) jarakInput.value = distanceKm;
+    if(distanceBadge) distanceBadge.innerText = `Jarak: ${distanceKm} KM`;
 
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
         .then(res => res.json())
         .then(data => {
-            if (data && data.display_name) {
-                document.getElementById('alamatLengkap').value = data.display_name;
+            const alamatInput = document.getElementById('alamatLengkap');
+            if (data && data.display_name && alamatInput) {
+                alamatInput.value = data.display_name;
             }
         });
 }
@@ -338,4 +493,5 @@ function hitungJarak(lat1, lon1, lat2, lon2) {
 
 document.addEventListener('DOMContentLoaded', initLeafletMap);
 </script>
+
 @endpush

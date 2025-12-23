@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Menu; // Sesuaikan nama model menu kamu
-use App\Models\Cart; // Pastikan kamu sudah buat model/tabel Cart
+use App\Models\Menu; 
+use App\Models\Cart; 
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\UserAlamat; // Tambahkan ini agar tidak error
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
@@ -87,54 +91,76 @@ public function updateQuantity(Request $request, $id)
         'message' => 'Item tidak ditemukan'
     ], 404);
 }
-
 public function checkout()
-{
-    // 1. Ambil item keranjang
-    $cart_items = Cart::where('user_id', Auth::id())->with('menu')->get();
-    
-    // 2. Ambil SEMUA alamat user
-    $user_addresses = \App\Models\UserAlamat::where('user_id', Auth::id())->get();
-    
-  // 3. Tentukan Selected Address (Cari yang is_utama dulu)
-$selected_address = $user_addresses->where('is_utama', 1)->first();
+    {
+        $cart_items = Cart::where('user_id', Auth::id())->with('menu')->get();
+        $user_addresses = UserAlamat::where('user_id', Auth::id())->get();
+        
+        $selected_address = $user_addresses->where('is_utama', 1)->first() ?: $user_addresses->first();
 
-// Jika ternyata tidak ada satupun yang is_utama, baru ambil yang pertama sebagai cadangan
-if (!$selected_address) {
-    $selected_address = $user_addresses->first();
-}
+        // Pakai 'menu' sesuai relasi di index
+        $subtotal = $cart_items->sum(fn($i) => $i->quantity * $i->menu->price);
 
-    // 4. Hitung Subtotal
-    $subtotal = $cart_items->sum(fn($i) => $i->quantity * $i->menu->price);
+        $jarak = $selected_address ? $selected_address->jarak : 0;
+        $jarak_hitung = min(7, $jarak); // Lebih simpel pakai min()
+        $ongkir = $jarak_hitung * 2000; 
+        
+        $total_pembayaran = $subtotal + $ongkir;
 
-    // --- LOGIKA ONGKIR BARU ---
-    // Cek jika ada alamat, ambil jaraknya. Jika tidak ada, default 0 km.
-    $jarak = $selected_address ? $selected_address->jarak : 0;
-
-    // Batasi jarak maksimal 7 km
-    if ($jarak > 7) {
-        $jarak_hitung = 7;
-    } else {
-        $jarak_hitung = $jarak;
+        return view('checkout', compact(
+            'cart_items', 'user_addresses', 'selected_address', 
+            'subtotal', 'ongkir', 'total_pembayaran'
+        ));
     }
 
-    // Hitung ongkir: Jarak x 2000
-    $ongkir = $jarak_hitung * 2000;
-    
-    $total_pembayaran = $subtotal + $ongkir;
+    public function processCheckout(Request $request)
+    {
+        $request->validate([
+            'alamat_id' => 'required',
+        ]);
 
-    // 5. Kirim ke view
-    return view('checkout', compact(
-        'cart_items', 
-        'user_addresses', 
-        'selected_address', 
-        'subtotal', 
-        'ongkir', 
-        'total_pembayaran',
-        //'jarak' // Opsional: kirim data jarak untuk ditampilkan di struk
-    ));
-}
-    // Menghapus item
+        $user = Auth::user();
+        // Sesuai dengan fungsi checkout, gunakan with('menu')
+        $cartItems = Cart::where('user_id', $user->id)->with('menu')->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Keranjang Anda kosong.');
+        }
+
+        $alamat = UserAlamat::findOrFail($request->alamat_id);
+        
+        // Hitung ulang biaya untuk keamanan database
+        $subtotal = $cartItems->sum(fn($item) => $item->menu->price * $item->quantity);
+        $ongkir = min(7, $alamat->jarak) * 2000; 
+
+        // 1. Simpan ke tabel Orders
+        $order = Order::create([
+            'user_id' => $user->id,
+            'alamat_id' => $request->alamat_id,
+            'order_number' => 'SRG-' . strtoupper(Str::random(10)),
+            'subtotal' => $subtotal,
+            'ongkir' => $ongkir,
+            'total_pembayaran' => $subtotal + $ongkir,
+            'payment_method' => 'COD',
+            'status' => 'pending',
+        ]);
+
+        // 2. Simpan ke tabel Order Items
+        foreach ($cartItems as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item->menu_id, // Pastikan ini menu_id sesuai tabel Cart
+                'quantity' => $item->quantity,
+                'price' => $item->menu->price, 
+            ]);
+        }
+
+        // 3. Kosongkan Keranjang
+        Cart::where('user_id', $user->id)->delete();
+
+        return redirect()->route('home')->with('success', 'Pesanan berhasil dibuat! Admin akan segera memproses.');
+    }
+
     public function removeFromCart($id)
     {
         Cart::where('user_id', Auth::id())->where('id', $id)->delete();

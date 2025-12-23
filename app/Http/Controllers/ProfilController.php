@@ -91,6 +91,8 @@ public function createAlamat()
         return response()->json(['success' => 'Alamat berhasil dihapus!']);
     }
 
+    
+
 public function updateProfil(Request $request)
 {
     /** @var \App\Models\User $user */
@@ -124,6 +126,8 @@ public function updateProfil(Request $request)
             $user->profile_picture = 'uploads/profile/' . $nama_file;
         }
 
+        
+
         $user->save();
 
         return redirect()->back()->with('success', 'Perubahan data berhasil disimpan!');
@@ -133,5 +137,36 @@ public function updateProfil(Request $request)
         return redirect()->back()->with('error', 'Gagal: ' . $e->getMessage());
     }
 } // <--- Pastikan ada ini untuk tutup fungsi
+
+public function updateMap(Request $request, $id)
+{
+    try {
+        $request->validate([
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'alamat_lengkap' => 'required' // Pastikan teks alamat ikut dikirim
+        ]);
+
+        $alamat = UserAlamat::where('id', $id)
+                            ->where('user_id', auth()->id())
+                            ->firstOrFail();
+
+        // Update 3 kolom sekaligus
+        $alamat->update([
+            'latitude'       => $request->latitude,
+            'longitude'      => $request->longitude,
+            'alamat_lengkap' => $request->alamat_lengkap, 
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Koordinat dan Alamat Lengkap berhasil diperbarui!'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+}
+
+
 
 } // <--- Pastikan ada ini untuk tutup class di paling akhir file

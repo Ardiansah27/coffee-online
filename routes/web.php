@@ -53,9 +53,13 @@ Route::delete('/profil/alamat/{id}', [ProfilController::class, 'deleteAlamat'])-
 // 4. Set Alamat Utama
 Route::post('/profil/alamat-utama/{id}', [ProfilController::class, 'setAlamatUtama'])->name('profil.alamat.utama');
 
+// 5. Update Koordinat Map (Pinpoint)
+Route::post('/profil/alamat/update-map/{id}', [ProfilController::class, 'updateMap'])->name('profil.alamat.updateMap');
+
     // Checkout & Transaksi
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
     Route::get('/beli/{id}', [CartController::class, 'beliLangsung'])->name('beli');
+Route::post('/checkout/process', [CartController::class, 'processCheckout'])->name('checkout.process');
        // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
